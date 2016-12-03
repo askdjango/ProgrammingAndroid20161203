@@ -31,7 +31,9 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             // login 상황
-            mFirebaseUser.getDisplayName();
+            String name = mFirebaseUser.getDisplayName();
+            Toast.makeText(this, name, Toast.LENGTH_LONG).show();
+
             if ( mFirebaseUser.getPhotoUrl() != null ) {
                 mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
             }

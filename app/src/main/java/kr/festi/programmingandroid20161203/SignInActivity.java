@@ -9,11 +9,14 @@ import android.view.View;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 
 public class SignInActivity extends AppCompatActivity
@@ -53,6 +56,23 @@ public class SignInActivity extends AppCompatActivity
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if ( requestCode == RC_GOOGLE_SIGN_IN ) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            if ( result.isSuccess() ) {
+                String token = result.getSignInAccount().getIdToken();
+                AuthCredential credential = GoogleAuthProvider.getCredential(token, null);
+                mFirebaseAuth.signInWithCredential(credential);
+            }
+            else {
+                Log.d(TAG, "Google Login Failed." + result.getStatus());
+            }
+        }
     }
 
     @Override
