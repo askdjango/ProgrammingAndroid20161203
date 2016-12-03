@@ -1,5 +1,6 @@
 package kr.festi.programmingandroid20161203;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -23,6 +24,10 @@ public class MainActivity extends AppCompatActivity {
         if ( mFirebaseUser == null ) {
             // logout 상황
             Toast.makeText(this, "로그인이 필요합니다", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(this, SignInActivity.class);
+            startActivity(intent);
+            finish();
         }
         else {
             // login 상황
