@@ -1,19 +1,31 @@
 package kr.festi.programmingandroid20161203;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements GoogleApiClient.OnConnectionFailedListener {
+
     FirebaseAuth mFirebaseAuth;
     FirebaseUser mFirebaseUser;
+
+    GoogleApiClient mGoogleApiClient;
 
     String mUsername;
     String mPhotoUrl;
@@ -51,5 +63,39 @@ public class MainActivity extends AppCompatActivity {
             Glide.with(this).load(mPhotoUrl).into(photoImageView);
         }
 
+        usernameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("로그아웃 의향 묻기")
+                        .setMessage("정말 로그아웃하시겠습니까?")
+                        // .setNeutralButton()
+                        // .setNegativeButton()
+                        .setPositiveButton("예. 하겠습니다. (단호)", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                mFirebaseAuth.signOut();
+                                Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+                                LoginManager.getInstance().logOut();
+
+                                Intent intent = new Intent(MainActivity.this, SignInActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+                dialog.show();
+            }
+        });
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API)
+                .build();
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Toast.makeText(this, "구글 플레이 서비스에 접속할 수 없습니다.", Toast.LENGTH_SHORT).show();
     }
 }
