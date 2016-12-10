@@ -3,10 +3,10 @@ package kr.festi.programmingandroid20161203;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.sdsmdg.tastytoast.TastyToast;
 
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
@@ -30,7 +30,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                TastyToast.makeText(getApplicationContext(), message, TastyToast.LENGTH_LONG, TastyToast.INFO);
             }
         });
     }
