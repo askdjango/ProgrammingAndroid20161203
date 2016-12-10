@@ -3,6 +3,7 @@ package kr.festi.programmingandroid20161203;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -10,12 +11,17 @@ import com.sdsmdg.tastytoast.TastyToast;
 
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
+
+    final static String TAG = MyFirebaseMessagingService.class.getName();
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        Log.d(TAG, "onMessageReceived : " + remoteMessage.getData());
+
         if ( remoteMessage.getData().size() > 0 ) {
             String messageBody = remoteMessage.getData().get("message_body");
             if ( messageBody != null ) {
-                String messageType = remoteMessage.getData().get("message_type");
+                String messageType = remoteMessage.getData().get("message_type_string");
                 toast(messageBody, messageType);
             }
         }
